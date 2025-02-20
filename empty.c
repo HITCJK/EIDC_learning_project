@@ -42,14 +42,24 @@ int main(void)
     OLED_Init(); // ≥ı ºªØOLED
     OLED_Clear();
 
-    voltage_list *list = create_voltage_list_triangle_wave(1000, 3, get_unit_of_time(1000));
+    voltage_list *list = create_voltage_list_square_wave(700, 3, get_unit_of_time(700));
 
     while (1)
     {
         OLED_Clear();
         for (int i = 0; i < 128; i++)
         {
-            OLED_DrawPoint(i, list->voltage_count_display, 1);
+            if(list->voltage_count_display<=63)
+            {
+                OLED_DrawPoint(i, list->voltage_count_display, 1);
+            }
+            else 
+            {
+                for(int j=0;j<60;j++)
+                {
+                    OLED_DrawPoint(i,j,1);
+                }
+            }
             list = list->next;
         }
         OLED_Refresh();        
