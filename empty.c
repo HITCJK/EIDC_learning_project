@@ -29,13 +29,38 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include "ti_msp_dl_config.h"
+#include "board.h"
+#include <stdio.h>
+#include "oled.h"
 
 int main(void)
 {
-    SYSCFG_DL_init();
-
-    while (1) {
+    //开发板初始化
+    board_init();
+    OLED_Init();    //初始化OLED
+    OLED_Clear();
+        
+    while(1) 
+    {
+        OLED_ShowString(0,0,(uint8_t *)"ABC",8,1);//6*8 “ABC”
+        OLED_ShowString(0,8,(uint8_t *)"ABC",12,1);//6*12 “ABC”
+        OLED_ShowString(0,20,(uint8_t *)"ABC",16,1);//8*16 “ABC”
+        OLED_ShowString(0,36,(uint8_t *)"ABC",24,1);//12*24 “ABC”
+        OLED_Refresh();
+        delay_ms(500);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
