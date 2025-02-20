@@ -30,37 +30,24 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "board.h"
-#include <stdio.h>
 #include "oled.h"
+#include <stdio.h>
+#include <math.h>
 
 int main(void)
 {
-    //开发板初始化
+    // 开发板初始化
     board_init();
-    OLED_Init();    //初始化OLED
+    OLED_Init(); // 初始化OLED
     OLED_Clear();
-        
-    while(1) 
+
+    while (1)
     {
-        OLED_ShowString(0,0,(uint8_t *)"ABC",8,1);//6*8 “ABC”
-        OLED_ShowString(0,8,(uint8_t *)"ABC",12,1);//6*12 “ABC”
-        OLED_ShowString(0,20,(uint8_t *)"ABC",16,1);//8*16 “ABC”
-        OLED_ShowString(0,36,(uint8_t *)"ABC",24,1);//12*24 “ABC”
+        for (int i = 0; i < 128; i++)
+        {
+            OLED_DrawPoint(i, (int) fmin(32 * sin(i / 128.0 * 2 * M_PI) + 32, 63), 1);
+        }
         OLED_Refresh();
         delay_ms(500);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
