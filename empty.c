@@ -31,8 +31,9 @@
  */
 #include "board.h"
 #include "oled.h"
+#include "voltage_list.h"
 #include <stdio.h>
-#include <math.h>
+
 
 int main(void)
 {
@@ -41,13 +42,17 @@ int main(void)
     OLED_Init(); // ≥ı ºªØOLED
     OLED_Clear();
 
+    voltage_list *list = create_voltage_list_triangle_wave(1000, 3, get_unit_of_time(1000));
+
     while (1)
     {
+        OLED_Clear();
         for (int i = 0; i < 128; i++)
         {
-            OLED_DrawPoint(i, (int) fmin(32 * sin(i / 128.0 * 2 * M_PI) + 32, 63), 1);
+            OLED_DrawPoint(i, list->voltage_count_display, 1);
+            list = list->next;
         }
-        OLED_Refresh();
+        OLED_Refresh();        
         delay_ms(500);
     }
 }
