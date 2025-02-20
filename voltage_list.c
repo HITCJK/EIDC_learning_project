@@ -34,7 +34,7 @@ voltage_list *create_voltage_list_sine_wave(int cycle, float Vpp, int unit_of_ti
     {
         temp->voltage_count_output = (int)((Vpp / 2 * sin((float)i / ((cycle*1000) / unit_of_time) * 2 * M_PI)) / 3.3 * 4095);
         temp->voltage_count_display =
-            (int)fmin(((Vpp / 2 * sin((float)i / ((cycle*1000) / unit_of_time) * 2 * M_PI)) / 0.05 + 32), 63);
+            (int)fmin(((Vpp / 2 * sin((float)i / ((cycle*1000) / unit_of_time) * 2 * M_PI)) / 0.0625 + 24), 48);
         if (i < (cycle*1000) / unit_of_time)
         {
             temp->next = (voltage_list *)malloc(sizeof(voltage_list));
@@ -62,14 +62,14 @@ voltage_list *create_voltage_list_triangle_wave(int cycle, float Vpp, int unit_o
         if(i<=(cycle*1000) / unit_of_time /2)
         {
             temp->voltage_count_output=(int)(( Vpp / ((cycle*1000) / unit_of_time/2) *(float)i )/3.3*4095);
-            temp->voltage_count_display=(int)fmin(( Vpp / ((cycle*1000) / unit_of_time/2) *(float)i )/0.05,63);
+            temp->voltage_count_display=(int)fmin(( Vpp / ((cycle*1000) / unit_of_time/2) *(float)i )/0.0625,63);
         }
         else 
         {
             temp->voltage_count_output=
             (int)((Vpp-( Vpp / ((cycle*1000) / unit_of_time/2) *(float)(i-(cycle*1000) / unit_of_time /2)))/3.3*4095);
             temp->voltage_count_display=
-            (int)fmin((Vpp-( Vpp / ((cycle*1000) / unit_of_time/2) *(float)(i-(cycle*1000) / unit_of_time /2)))/0.05,63);
+            (int)fmin((Vpp-( Vpp / ((cycle*1000) / unit_of_time/2) *(float)(i-(cycle*1000) / unit_of_time /2)))/0.0625,63);
         }
         if (i < (cycle*1000) / unit_of_time)
         {
@@ -97,7 +97,7 @@ voltage_list *create_voltage_list_square_wave(int cycle, float Vpp, int unit_of_
             (int)fmin(((Vpp / 2 * sin((float)i / ((cycle*1000) / unit_of_time) * 2 * M_PI)) / 0.05 + 32), 63);*/
         if(i<(cycle*1000) / unit_of_time /2)
         {
-            temp->voltage_count_display=(int)fmin(Vpp/0.05,63);
+            temp->voltage_count_display=(int)fmin(Vpp/0.0625,63);
             temp->voltage_count_output=(int)Vpp/3.3*4095;
         }
         else if(i>(cycle*1000) / unit_of_time /2)
@@ -131,7 +131,7 @@ voltage_list *create_voltage_list_DC_wave(int cycle, float Vpp, int unit_of_time
     for (int i = 0; i <= (cycle*1000) / unit_of_time; i++)
     {
         temp->voltage_count_output = (int)Vpp/3.3*4095;
-        temp->voltage_count_display =(int)Vpp/0.05;
+        temp->voltage_count_display =(int)Vpp/0.0625;
         if (i < (cycle*1000) / unit_of_time)
         {
             temp->next = (voltage_list *)malloc(sizeof(voltage_list));

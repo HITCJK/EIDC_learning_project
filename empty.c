@@ -34,19 +34,28 @@
 #include "voltage_list.h"
 #include <stdio.h>
 
-
 int main(void)
 {
     // 开发板初始化
     board_init();
     OLED_Init(); // 初始化OLED
     OLED_Clear();
-
-    voltage_list *list = create_voltage_list_square_wave(700, 3, get_unit_of_time(700));
+    char*scr="VPP:";
+    char*scr_="f:";
+    char*VPP="2.5V";
+    char*fre="1kHz";
+    voltage_list *list = create_voltage_list_sine_wave(700, 3, get_unit_of_time(700));
 
     while (1)
     {
         OLED_Clear();
+        OLED_DisplayTurn(1);//屏幕翻转180°
+        OLED_DrawLine(0,48,127,48,1);
+        OLED_DrawLine(63,48,63,63,1);
+        OLED_ShowString(0,49,scr,12,1);
+        OLED_ShowString(24,49,VPP,12,1);//显示Vpp
+        OLED_ShowString(64,49,scr_,12,1);
+        OLED_ShowString(76,49,fre,12,1);//显示fre
         for (int i = 0; i < 128; i++)
         {
             if(list->voltage_count_display<=63)
