@@ -40,31 +40,35 @@ int main(void)
     board_init();
     OLED_Init(); // 初始化OLED
     OLED_Clear();
-    char*scr="VPP:";
-    char*scr_="f:";
+    char scr[]="VPP:";
+    char scr_[]="Fre:";
     char*VPP="2.5V";
-    char*fre="1kHz";
+    char*fre="100Hz";
     voltage_list *list = create_voltage_list_sine_wave(700, 3, get_unit_of_time(700));
 
     while (1)
     {
         OLED_Clear();
-        OLED_DisplayTurn(1);//屏幕翻转180°
-        OLED_DrawLine(0,48,127,48,1);
-        OLED_DrawLine(63,48,63,63,1);
-        OLED_ShowString(0,49,scr,12,1);
-        OLED_ShowString(24,49,VPP,12,1);//显示Vpp
-        OLED_ShowString(64,49,scr_,12,1);
-        OLED_ShowString(76,49,fre,12,1);//显示fre
+        //OLED_DisplayTurn(1);//屏幕翻转180°
+        OLED_DrawLine(0,15,127,15,1);
+        OLED_DrawLine(63,0,63,16,1);
+        OLED_ShowString(0,0,scr,8,1);
+        OLED_ShowString(24,0,VPP,8,1);//显示Vpp
+        OLED_ShowString(64,0,scr_,8,1);
+        OLED_ShowString(88,0,fre,8,1);//显示fre
         for (int i = 0; i < 128; i++)
         {
-            if(list->voltage_count_display<=63)
+            if(list->voltage_count_display<=63&&list->voltage_count_display!=48)
             {
-                OLED_DrawPoint(i, list->voltage_count_display, 1);
+                OLED_DrawPoint(i,63-list->voltage_count_display, 1);
+            }
+            else if(list->voltage_count_display==48)
+            {
+                OLED_DrawPoint(i,16,1);
             }
             else 
             {
-                for(int j=0;j<60;j++)
+                for(int j=15;j<64;j++)
                 {
                     OLED_DrawPoint(i,j,1);
                 }
