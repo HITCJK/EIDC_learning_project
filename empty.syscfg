@@ -1,13 +1,15 @@
 /**
  * These arguments were used when this file was generated. They will be automatically applied on subsequent loads
  * via the GUI or CLI. Run CLI with '--help' for additional information on how to override these arguments.
- * @cliArgs --device "MSPM0G350X" --package "LQFP-64(PM)" --part "Default" --product "mspm0_sdk@2.00.01.00"
- * @versions {"tool":"1.20.0+3587"}
+ * @cliArgs --device "MSPM0G350X" --part "Default" --package "LQFP-48(PT)" --product "mspm0_sdk@2.03.00.08"
+ * @v2CliArgs --device "MSPM0G3507" --package "LQFP-48(PT)" --product "mspm0_sdk@2.03.00.08"
+ * @versions {"tool":"1.21.1+3772"}
  */
 
 /**
  * Import the modules used in this configuration.
  */
+const DAC12   = scripting.addModule("/ti/driverlib/DAC12");
 const GPIO    = scripting.addModule("/ti/driverlib/GPIO", {}, false);
 const GPIO1   = GPIO.addInstance();
 const SYSCTL  = scripting.addModule("/ti/driverlib/SYSCTL");
@@ -20,6 +22,20 @@ const UART1   = UART.addInstance();
  */
 const gate7  = system.clockTree["MFCLKGATE"];
 gate7.enable = true;
+
+const gate8  = system.clockTree["MFPCLKGATE"];
+gate8.enable = true;
+
+DAC12.dacAmplifier              = "ON";
+DAC12.dacOutputPinEn            = true;
+DAC12.peripheral.$assign        = "DAC0";
+DAC12.peripheral.OutPin.$assign = "PA15";
+DAC12.OutPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric2";
+
+const Board                       = scripting.addModule("/ti/driverlib/Board", {}, false);
+Board.peripheral.$assign          = "DEBUGSS";
+Board.peripheral.swclkPin.$assign = "PA20";
+Board.peripheral.swdioPin.$assign = "PA19";
 
 GPIO1.$name                          = "GPIO";
 GPIO1.port                           = "PORTA";
@@ -45,10 +61,9 @@ GPIO1.associatedPins[4].initialValue = "SET";
 GPIO1.associatedPins[4].assignedPin  = "2";
 GPIO1.associatedPins[4].pin.$assign  = "PA2";
 
-const Board = scripting.addModule("/ti/driverlib/Board", {}, false);
-
 SYSCTL.forceDefaultClkConfig = true;
 SYSCTL.clockTreeEn           = true;
+SYSCTL.MFPCLKEn              = true;
 
 SYSTICK.periodEnable      = true;
 SYSTICK.systickEnable     = true;
@@ -64,11 +79,5 @@ UART1.peripheral.txPin.$assign = "PA10";
 UART1.txPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric0";
 UART1.rxPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric1";
 
-/**
- * Pinmux solution for unlocked pins/peripherals. This ensures that minor changes to the automatic solver in a future
- * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
- * re-solve from scratch.
- */
-Board.peripheral.$suggestSolution          = "DEBUGSS";
-Board.peripheral.swclkPin.$suggestSolution = "PA20";
-Board.peripheral.swdioPin.$suggestSolution = "PA19";
+const ProjectConfig              = scripting.addModule("/ti/project_config/ProjectConfig", {}, false);
+ProjectConfig.migrationCondition = true;

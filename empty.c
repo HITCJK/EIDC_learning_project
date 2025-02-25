@@ -31,9 +31,20 @@
  */
 #include "board.h"
 #include "oled.h"
+#include "ti/driverlib/dl_dac12.h"
+#include "ti/driverlib/m0p/dl_core.h"
+#include "ti_msp_dl_config.h"
 #include "voltage_list.h"
 #include <stdio.h>
 
+/*char str[3];
+void GetVpp(float Vpp)
+{
+    char str_[]="V";
+    //char a[100];
+    sprintf(str, "%f",Vpp);
+    //sprintf(str,"%s%s",a,str_);
+}*/
 int main(void)
 {
     // 开发板初始化
@@ -42,13 +53,14 @@ int main(void)
     OLED_Clear();
     char scr[]="VPP:";
     char scr_[]="Fre:";
-    char*VPP="2.5V";
-    char*fre="100Hz";
-    voltage_list *list = create_voltage_list_sine_wave(700, 3, get_unit_of_time(700));
-
+    char VPP[]="3V";
+    char fre[]="100Hz";
+    /*voltage_list *list = create_voltage_list_triangle_wave(10, 3, get_unit_of_time(10));*/
+    voltage_list *list1 = create_voltage_list_sine_wave(10, 3, get_unit_of_time(10));
+    //GetVpp(2.5);
     while (1)
     {
-        OLED_Clear();
+        /*OLED_Clear();
         //OLED_DisplayTurn(1);//屏幕翻转180°
         OLED_DrawLine(0,15,127,15,1);
         OLED_DrawLine(63,0,63,16,1);
@@ -75,7 +87,11 @@ int main(void)
             }
             list = list->next;
         }
-        OLED_Refresh();        
-        delay_ms(500);
+        OLED_Refresh();
+        delay_cycles(32000000*0.5);*/
+        DL_DAC12_output12(DAC0,list1->voltage_count_output);
+        DL_DAC12_enable(DAC0);//使能DAC输出
+        list1=list1->next;  
+        delay_cycles(32000*0.2);//(32000*(float)cycle/(int)(cycle*1000/get_unit_of_time(cycle)))
     }
 }
